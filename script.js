@@ -122,7 +122,7 @@ function updateWeatherUI(data) {
       panel.style.backgroundColor = `rgba(110, 110, 110, 0.1)`;
     } else {
       app.style.backgroundImage = `url(./images/df0a3e2ec30abb1c92d145ef165b714f.gif)`;
-      panel.style.backgroundColor = `rgba(110, 110, 110, 0.1)`;
+      panel.style.backgroundColor = `rgba(110, 110, 110, 0.1)`; 
     }
   
 
