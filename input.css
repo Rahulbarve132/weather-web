@@ -148,6 +148,20 @@ h1, h3{
     color: #f0efef;
 }
 
+.toggle-unit{
+    border: 1px solid white;
+    padding: 10px 40px;
+    font: bold;
+    cursor: pointer;
+    background: rgba(110, 110, 110, 0.1);
+    border-radius: 10px;
+    color: #fcf5f5;
+    backdrop-filter: blur(10px);
+    font-weight: 600;
+    
+    
+}
+
 .panel ul{
     padding: 0 0 1em 0;
     margin: 3em 0;

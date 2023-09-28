@@ -9,6 +9,7 @@ let cityInp = document.getElementById("locInp");
 
 const timel = document.getElementById('time');
 const datel = document.getElementById('date');
+const toggle_unit = document.getElementsByClassName('toggle-unit');
 
 const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -51,7 +52,7 @@ window.addEventListener("load", getLocationAndWeather);
 
 // Function to fetch weather details from API and display them
 function getWeather(cityValue) {
-  const url=`https://api.openweathermap.org/data/2.5/weather?q=${cityValue}&appid=${key}`;
+  const url=`https://api.openweathermap.org/data/2.5/weather?q=${cityValue}&appid=${key}&units=imperial`;
 
   fetch(url)
     .then((resp) => resp.json())
@@ -79,10 +80,11 @@ searchBtn.addEventListener("click", function (e) {
 
 // Function to get weather data by coordinates
 function getWeatherByCoordinates(latitude, longitude) {
-  fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${key}&units=metric`)
+  fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${key}&units=imperial`)
     .then((resp) => resp.json())
     .then((data) => {
       updateWeatherUI(data);
+      setupToggleTemperatureButton();
     })
     .catch(() => {
       result.innerHTML = "";
@@ -93,8 +95,39 @@ function getWeatherByCoordinates(latitude, longitude) {
     });
 }
 
+
+function setupToggleTemperatureButton() {
+  // Function to toggle temperature units between Celsius and Fahrenheit
+  function toggleTemperatureUnit() {
+    const temperatureElement = document.querySelector(".temp");
+    const currentUnit = temperatureElement.innerHTML.includes("°C") ? "C" : "F";
+
+    const currentTemperature = parseFloat(temperatureElement.innerHTML);
+    let newTemperature;
+
+    if (currentUnit === "C") {
+      // Convert Celsius to Fahrenheit: °F = (°C * 9/5) + 32
+      newTemperature = (currentTemperature * 9/5) + 32;
+      temperatureElement.innerHTML = `${newTemperature.toFixed(2)}°F`;
+      toggle_unit[0].textContent = "unit: °C";
+    } else {
+      // Convert Fahrenheit to Celsius: °C = (°F - 32) * 5/9
+      newTemperature = (currentTemperature - 32) * 5/9;
+      temperatureElement.innerHTML = `${newTemperature.toFixed(2)}°C`;
+      toggle_unit[0].textContent = "unit: °F";
+    }
+  }
+
+  // Add a click event listener to the toggle unit button
+  toggle_unit[0].addEventListener("click", toggleTemperatureUnit);
+}
+
+
 // Function to update the weather UI
 function updateWeatherUI(data) {
+
+
+  
     const imageChange = data.weather[0].main;
   
     if (imageChange === "Snow") {
@@ -127,7 +160,7 @@ function updateWeatherUI(data) {
   
 
     result.innerHTML = `
-      <h1 class="temp">${data.main.temp}&#176;</h1>
+      <h1 class="temp">${data.main.temp}&#176;</h1> 
       <div class="city-time">
           <h1 class="name">${data.name}</h1>
       </div>
@@ -159,5 +192,11 @@ function updateWeatherUI(data) {
         <span class="pressure">${data.main.pressure}</span>
       </li>
     `;
+    window.addEventListener("load", function () {
+      getLocationAndWeather();
+      setupToggleTemperatureButton(); // Call the function to set up the event listener
+    });
+
+
   }
   
